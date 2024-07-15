@@ -39,7 +39,7 @@ func LoginUserController(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token logged in successfully": token})
+	c.JSON(http.StatusOK, gin.H{"token": token})
 }
 
 func GetAllRegisterUser(c *gin.Context) {

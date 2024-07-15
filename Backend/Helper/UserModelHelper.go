@@ -31,7 +31,6 @@ func RegisterUserHelper(user model.User) error {
 	} else if err != mongo.ErrNoDocuments {
 		return fmt.Errorf("error checking email uniqueness: %v", err)
 	}
-
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return fmt.Errorf("error in hashing password: %v", err)
@@ -49,7 +48,7 @@ func RegisterUserHelper(user model.User) error {
 
 func LoginUserHelper(user model.User) (string, error) {
 	var foundUser model.User
-	err := database.Collection.FindOne(context.Background(), bson.M{"name": user.Name}).Decode(&foundUser)
+	err := database.Collection.FindOne(context.Background(), bson.M{"email": user.Email}).Decode(&foundUser)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return "", fmt.Errorf("user not found")
