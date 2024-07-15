@@ -24,6 +24,14 @@ type Claims struct {
 }
 
 func RegisterUserHelper(user model.User) error {
+	existingUser := model.User{}
+	err := database.Collection.FindOne(context.Background(), bson.M{"email": user.Email}).Decode(&existingUser)
+	if err == nil {
+		return fmt.Errorf("email address already exists")
+	} else if err != mongo.ErrNoDocuments {
+		return fmt.Errorf("error checking email uniqueness: %v", err)
+	}
+
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return fmt.Errorf("error in hashing password: %v", err)
