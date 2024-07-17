@@ -12,10 +12,11 @@ import (
 const (
 	ConnectionString = "mongodb://localhost:27017/"
 	DatabaseName     = "ExpenseTracker"
-	CollectionName   = "ExpenseCollection"
 )
 
-var Collection *mongo.Collection
+var TotalCollection *mongo.Collection
+var UserCollection *mongo.Collection
+var TransactionCollection *mongo.Collection
 
 func InitDatabase() {
 	clientOptions := options.Client().ApplyURI(ConnectionString)
@@ -24,6 +25,8 @@ func InitDatabase() {
 		log.Fatal(err)
 	}
 
-	Collection = client.Database(DatabaseName).Collection(CollectionName)
+	UserCollection = client.Database(DatabaseName).Collection("User")
+	TotalCollection = client.Database(DatabaseName).Collection("Amount")
+	TransactionCollection = client.Database(DatabaseName).Collection("Transaction")
 	fmt.Println("Database Connected successfully")
 }

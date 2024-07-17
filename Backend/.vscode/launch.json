@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Program",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "D:/languages/Go/ExpenseTracker/Backend/main.go",
+            "env": {},
+            "args": [],
+            "showLog": true
+        }
+    ]
+}

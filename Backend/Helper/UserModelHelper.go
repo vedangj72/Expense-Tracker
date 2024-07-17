@@ -25,7 +25,7 @@ type Claims struct {
 
 func RegisterUserHelper(user model.User) error {
 	existingUser := model.User{}
-	err := database.Collection.FindOne(context.Background(), bson.M{"email": user.Email}).Decode(&existingUser)
+	err := database.UserCollection.FindOne(context.Background(), bson.M{"email": user.Email}).Decode(&existingUser)
 	if err == nil {
 		return fmt.Errorf("email address already exists")
 	} else if err != mongo.ErrNoDocuments {
@@ -39,7 +39,7 @@ func RegisterUserHelper(user model.User) error {
 
 	user.ID = primitive.NewObjectID()
 
-	_, err = database.Collection.InsertOne(context.Background(), user)
+	_, err = database.UserCollection.InsertOne(context.Background(), user)
 	if err != nil {
 		return fmt.Errorf("error in inserting user: %v", err)
 	}
@@ -48,7 +48,7 @@ func RegisterUserHelper(user model.User) error {
 
 func LoginUserHelper(user model.User) (string, error) {
 	var foundUser model.User
-	err := database.Collection.FindOne(context.Background(), bson.M{"email": user.Email}).Decode(&foundUser)
+	err := database.UserCollection.FindOne(context.Background(), bson.M{"email": user.Email}).Decode(&foundUser)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return "", fmt.Errorf("user not found")
@@ -91,7 +91,7 @@ func GetUserIDFromContext(c *gin.Context) (string, error) {
 func GetAllRegisterUser() ([]model.User, error) {
 	var users []model.User
 
-	cursor, err := database.Collection.Find(context.Background(), bson.M{})
+	cursor, err := database.UserCollection.Find(context.Background(), bson.M{})
 	if err != nil {
 		return nil, fmt.Errorf("error in finding users: %v", err)
 	}

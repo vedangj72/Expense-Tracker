@@ -15,7 +15,7 @@ import (
 func PostTotalAmountHelper(totalAmount model.Total) error {
 	totalAmount.ID = primitive.NewObjectID()
 
-	_, err := database.Collection.InsertOne(context.Background(), totalAmount)
+	_, err := database.TotalCollection.InsertOne(context.Background(), totalAmount)
 	if err != nil {
 		return fmt.Errorf("error in inserting total amount: %v", err)
 	}
@@ -25,7 +25,7 @@ func PostTotalAmountHelper(totalAmount model.Total) error {
 func GetTotalAmountHelper(userID primitive.ObjectID) ([]model.Total, error) {
 	var totals []model.Total
 
-	cursor, err := database.Collection.Find(context.Background(), bson.M{"user_id": userID})
+	cursor, err := database.TotalCollection.Find(context.Background(), bson.M{"user_id": userID})
 	if err != nil {
 		return nil, fmt.Errorf("error in finding totals: %v", err)
 	}

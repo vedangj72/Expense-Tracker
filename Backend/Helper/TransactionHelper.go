@@ -14,7 +14,7 @@ import (
 func TransactionHelperPost(transaction model.TransactionModel) error {
 	transaction.ID = primitive.NewObjectID()
 
-	success, err := database.Collection.InsertOne(context.Background(), transaction)
+	success, err := database.TransactionCollection.InsertOne(context.Background(), transaction)
 	if err != nil {
 		return errors.New(err.Error())
 	}
@@ -23,19 +23,26 @@ func TransactionHelperPost(transaction model.TransactionModel) error {
 	return nil
 }
 
-func TransactionHelperGet(UserId primitive.ObjectID) ([]model.TransactionModel, error) {
-	var transation []model.TransactionModel
+func TransactionHelperGet(userId primitive.ObjectID) ([]model.TransactionModel, error) {
+	var transactions []model.TransactionModel
 
-	cursor, err := database.Collection.Find(context.Background(), bson.M{})
-
+	// Filter to find transactions belonging to the specific user
+	filter := bson.M{"user_id": userId}
+	cursor, err := database.TransactionCollection.Find(context.Background(), filter)
 	if err != nil {
 		return nil, errors.New(err.Error())
 	}
 	defer cursor.Close(context.Background())
-	err = cursor.All(context.Background(), &transation)
+
+	// Decode all documents into the transactions slice
+	err = cursor.All(context.Background(), &transactions)
 	if err != nil {
 		return nil, errors.New(err.Error())
 	}
-	return transation, nil
 
+	if transactions == nil {
+		transactions = []model.TransactionModel{}
+	}
+
+	return transactions, nil
 }

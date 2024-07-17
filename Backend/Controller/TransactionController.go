@@ -39,7 +39,6 @@ func PostTransactionController(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, transaction)
 }
-
 func GetTransactionsController(c *gin.Context) {
 	UserId, err := helper.GetUserIDFromContext(c)
 	if err != nil {
